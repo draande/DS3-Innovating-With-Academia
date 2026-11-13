@@ -17,10 +17,19 @@ venv/
 !.env.example
 
 # Data and generated artifacts
+# (git can't re-include a file whose parent folder is ignored, so the folders
+# themselves are un-ignored and their contents ignored one level down)
 data/*
 !data/README.md
+!data/raw/
+data/raw/*
 !data/raw/.gitkeep
+!data/processed/
+data/processed/*
 !data/processed/.gitkeep
+# The scraped UC Tech Transfer database (~24 MB) is versioned so teammates
+# don't need to re-scrape; CSV exports are regenerated from it.
+!data/processed/uc_techtransfer.db
 results/*
 !results/.gitkeep
 models/*
