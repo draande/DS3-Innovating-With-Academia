@@ -29,5 +29,4 @@ SITEMAP_PATH = RAW_DIR / "sitemap.xml"
 HTML_DIR = RAW_DIR / "html"
 FETCH_LOG_PATH = RAW_DIR / "fetch_log.csv"
 
-DB_PATH = PROCESSED_DIR / "uc_techtransfer.db"
-CSV_DIR = PROCESSED_DIR / "csv"
+CSV_DIR = PROCESSED_DIR / "uc_techtransfer"

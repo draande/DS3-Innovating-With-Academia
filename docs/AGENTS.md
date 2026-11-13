@@ -133,10 +133,12 @@ rather than redefining logic inline.
 ├── requirements.txt
 ├── notebooks/        # exploration, EDA, prototyping — not the source of truth for pipeline logic
 ├── src/               # the actual reusable code — import this from notebooks
+│   └── scraper/       # UC Tech Transfer scraper (sitemap → fetch → parse → export CSV)
 ├── tests/             # pytest-style tests for src/
+│   └── fixtures/      # saved HTML pages used by the scraper tests
 ├── data/
-│   ├── raw/           # never edit by hand, never overwrite
-│   └── processed/
+│   ├── raw/           # never edit by hand, never overwrite (scraped HTML, sitemap; gitignored)
+│   └── processed/     # uc_techtransfer/*.csv — the scraped dataset (committed)
 ├── results/
 ├── models/
 ├── frontend/          # [delete this line if unused] UI/web app code
@@ -155,16 +157,25 @@ pip install -r requirements.txt
 cp .env.example .env   # then fill in your own local values — never commit .env
 ```
 
-[Add anything project-specific: a database that needs to be running
-locally, an API key required to run anything, a dataset that needs to be
-downloaded first, etc.]
+- The scraped dataset is already committed as CSVs in
+  `data/processed/uc_techtransfer/`, so you don't need to re-scrape to
+  start working: `pd.read_csv("data/processed/uc_techtransfer/technologies.csv")`.
+  See `data/README.md` for the files and columns.
+- Regenerating the CSVs requires the raw HTML in `data/raw/html/`
+  (gitignored), i.e. running the scraper.
 
 ## Running things
 
-- Run the main pipeline: `[e.g. python -m src.pipeline]`
+- Run the scraping pipeline (from the repo root):
+  - Everything: `python -m src.scraper.run` (first run downloads ~3.8k
+    pages at ~1 request/sec, 1–3 h; resumable — re-running skips pages
+    already in `data/raw/html/`)
+  - Trial run: `python -m src.scraper.run --limit 50`
+  - Rebuild CSVs from already-downloaded HTML: `python -m src.scraper.run --parse-only`
+  - Re-download the sitemap: add `--refresh-sitemap`
+- Individual steps: `python -m src.scraper.fetch [--limit N]`,
+  `python -m src.scraper.export`
 - Launch notebooks: `jupyter lab notebooks/`
-- [Any other entry point: a Streamlit app, a FastAPI server, a training
-  script — give the exact command.]
 
 ## Testing
 
@@ -175,6 +186,8 @@ downloaded first, etc.]
 - Some validation also happens inline in notebooks (e.g. sanity-checking
   shapes/values after a transform) — [say which notebooks, if any, are
   load-bearing for correctness rather than pure exploration].
+- Scraper tests never hit the network: they use saved pages in
+  `tests/fixtures/` and fake HTTP sessions.
 - Before opening a PR: run `pytest` and make sure it passes. New logic in
   `src/` should come with a test — either in `tests/` or a clear
   assertion-based check in the relevant notebook.
@@ -238,6 +251,24 @@ task done. Do this even if the person didn't explicitly ask you to.
 
 ## Useful context
 
-[Anything else an agent (or new teammate) would want to know: links to a
-`DesignDoc.md`, the dataset's source/license, known gotchas, an
-in-progress area of the code that's intentionally unfinished, etc.]
+**Dataset: UC Tech Transfer "Available Technologies"**
+- Source: https://techtransfer.universityofcalifornia.edu/ (public). Each
+  technology is a static page `/NCD/<tech_id>.html`; the full list comes
+  from `/sitemap.xml` (3,808 technologies as of 2026-11-12, matching the
+  site's own "List All" count). The search pages use ASP.NET postbacks —
+  don't scrape them.
+- Be polite to the site: keep `REQUEST_DELAY_SECONDS` (in
+  `src/scraper/config.py`) at ≥1s and fetch sequentially.
+- Output: CSVs in `data/processed/uc_techtransfer/` — `technologies.csv`
+  (one row per tech_id) plus `sections`, `inventors`, `keywords`,
+  `categories`, `patents`, `related_cases`, `related_technologies`, each
+  linked by `tech_id`. Columns are defined in `COLUMNS` in
+  `src/scraper/export.py` and described in `data/README.md`.
+- Gotchas: section headings vary by campus/era (mapped to canonical types
+  via `SECTION_TYPES` in `src/scraper/parse.py`; unmapped ones are kept as
+  `other`); campus labels are normalized via `CAMPUS_ALIASES`; inventors
+  are matched by exact name; many pages genuinely lack inventors/keywords.
+- Assumes the site is static (no incremental updates). To refresh:
+  `python -m src.scraper.run --refresh-sitemap` (new pages are fetched;
+  changed existing pages are not re-downloaded unless their HTML file is
+  deleted).

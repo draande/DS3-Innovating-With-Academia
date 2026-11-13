@@ -49,6 +49,8 @@ CAMPUS_ALIASES = {
     "University of California, Santa Cruz": "UC Santa Cruz",
     "UC Santa Cruz": "UC Santa Cruz",
     "UCSC": "UC Santa Cruz",
+    # Not a campus, but a UC division that lists technologies on the site.
+    "UC Agriculture and Natural Resources": "UC Agriculture and Natural Resources",
 }
 
 # --- Section headings ------------------------------------------------------
@@ -58,9 +60,11 @@ SECTION_TYPES = {
     "background": "background",
     "summary": "summary",
     "brief description": "summary",
+    "brief descripton": "summary",  # misspelling used on some pages
     "abstract": "summary",
     "technology description": "description",
     "full description": "description",
+    "full descripton": "description",  # misspelling used on some pages
     "description": "description",
     "innovation": "description",
     "applications": "applications",
@@ -70,10 +74,13 @@ SECTION_TYPES = {
     "features/benefits": "advantages",
     "benefits": "advantages",
     "value proposition": "advantages",
+    "advantages and suggested uses": "advantages",
     "state of development": "state_of_development",
     "stage of development": "state_of_development",
     "intellectual property info": "intellectual_property",
     "intellectual property information": "intellectual_property",
+    "patent information": "intellectual_property",
+    "ip status": "intellectual_property",
     "patent status": "patent_status",
     "related materials": "related_materials",
 }

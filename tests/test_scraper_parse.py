@@ -120,3 +120,5 @@ def test_helpers() -> None:
     assert section_type_for("BACKGROUND") == "background"
     assert section_type_for("Features/Benefits") == "advantages"
     assert section_type_for("Something Else") == "other"
+    assert section_type_for("Brief Descripton") == "summary"  # site typo
+    assert section_type_for("IP STATUS") == "intellectual_property"

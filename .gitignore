@@ -27,9 +27,9 @@ data/raw/*
 !data/processed/
 data/processed/*
 !data/processed/.gitkeep
-# The scraped UC Tech Transfer database (~24 MB) is versioned so teammates
-# don't need to re-scrape; CSV exports are regenerated from it.
-!data/processed/uc_techtransfer.db
+# The scraped UC Tech Transfer CSVs are versioned so teammates don't need to
+# re-scrape (raw HTML in data/raw/ stays local).
+!data/processed/uc_techtransfer/
 results/*
 !results/.gitkeep
 models/*
