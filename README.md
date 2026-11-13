@@ -46,7 +46,11 @@ A clean starter template for data science and machine learning projects at UC Sa
    ```
 2. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   python -m pip install -r requirements.txt
+   ```
+   If you’re running the UC tech scraper, install Chromium too:
+   ```bash
+   python -m playwright install chromium
    ```
 3. Copy the example environment file:
    ```bash
