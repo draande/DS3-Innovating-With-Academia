@@ -15,6 +15,9 @@ For example, **Nematode-Resistant Grape Rootstocks** is one document in `ip_reco
 
 Both types of embeddings have 384 dimensions. Listings marked `no_detail_text` still have a listing-level embedding and have zero detail chunks.
 
+![alt text](image.png)
+![alt text](image-1.png)
+
 ## How to check and run it
 
 **Check in Atlas.** In **Data Explorer → iwa-dev → iwa**, paste each filter into its collection and click **Find**.
