@@ -9,3 +9,5 @@ pytest>=8.0
 requests>=2.32
 beautifulsoup4>=4.12
 lxml>=5.0
+playwright>=1.40
+pymongo>=4.6
